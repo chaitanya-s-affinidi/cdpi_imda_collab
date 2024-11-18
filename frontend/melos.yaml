@@ -1,0 +1,32 @@
+name: vault_mobile_reference_app
+
+packages:
+  - apps/**
+  - packages/**
+
+scripts:
+
+  run:android:devrelease:
+    run: |
+      cd apps/job_portal
+      flutter emulators --launch flutter_emulator
+      until adb devices | grep emulator-5554; do sleep 1; done
+      flutter run
+      cd ../..
+  
+  run:web:devrelease:
+    run: |
+      cd apps/job_portal
+      flutter run --web-port=1234 -d chrome
+
+  run:deeplink:
+    run: |
+      cd deeplink
+      node app.js
+      ngrok http --domain=next-newt-visually.ngrok-free.app 5200
+  
+  deploy:job_portal:web:dev:
+    run: |
+      cd job_portal
+      flutter pub get
+      flutter build web --web-renderer html

@@ -1,0 +1,18 @@
+{
+  "id": "did:web:next-newt-visually.ngrok-free.app",
+  "@context": "https://w3id.org/security/v2",
+  "publicKey": [
+    {
+      "id": "did:web:next-newt-visually.ngrok-free.app#primary",
+      "usage": "signing",
+      "type": "Secp256k1VerificationKey2018",
+      "publicKeyHex": "0331359889f81ad54fe4a4b10bb3b88486d7bdf60c45389d9117b965493ed86a97"
+    }
+  ],
+  "authentication": [
+    "did:web:next-newt-visually.ngrok-free.app#primary"
+  ],
+  "assertionMethod": [
+    "did:web:next-newt-visually.ngrok-free.app#primary"
+  ]
+}

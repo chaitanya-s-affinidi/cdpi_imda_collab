@@ -1,0 +1,311 @@
+// import 'dart:convert';
+
+// import 'package:chopper/chopper.dart';
+// import 'package:job_portal/common/widgets/filled-button-with-feedback-animation.widget.dart';
+// import 'package:job_portal/common/widgets/decorated-text.widget.dart';
+// import 'package:job_portal/common/widgets/loading-animation.widget.dart';
+// import 'package:job_portal/global_constants.dart';
+// import 'package:job_portal/swagger_models_apis/job_seeker_api.swagger.dart'
+//     as jobseekermodels;
+// import 'package:job_portal/swagger_models_apis/user_management_api.models.swagger.dart'
+//     as usermanagementapi;
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+// import 'package:uuid/uuid_util.dart';
+// import 'package:uuid/uuid.dart';
+
+// class ViewJobPage extends StatefulWidget {
+//   final usermanagementapi.Job job;
+//   const ViewJobPage({
+//     super.key,
+//     required this.job,
+//   });
+
+//   @override
+//   State<ViewJobPage> createState() => _ViewJobPageState();
+// }
+
+// class _ViewJobPageState extends State<ViewJobPage> {
+//   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+//   bool _pageInitialized = false;
+//   usermanagementapi.Job? _currentJob;
+//   bool? _loadingInProgressFlag = true;
+//   bool? _registrationInProgressFlag;
+//   String? _transactionId;
+//   String? _messageId;
+
+//   @override
+//   void didChangeDependencies() {
+//     if (!_pageInitialized) {
+//       _transactionId = Uuid().v4();
+//       _messageId = Uuid().v4();
+//       jobseekermodels.Context newContext = jobseekermodels.Context(
+//           transactionId: _transactionId ?? "",
+//           messageId: _messageId ?? "",
+//           bppId: widget.job.bppId,
+//           bppUri: widget.job.bppUri);
+//       jobseekermodels.SelectJob? request = jobseekermodels.SelectJob(
+//         companyId: widget.job.company,
+//         jobs: jobseekermodels.SelectJob$Jobs(jobId: widget.job.jobId),
+//         context: newContext,
+//       );
+//       setState(() {
+//         _loadingInProgressFlag = true;
+//       });
+//       Provider.of<jobseekermodels.JobSeekerApi>(
+//         context,
+//         listen: false,
+//       )
+//           .jobSelectPost(body: request)
+//           .then((Response<jobseekermodels.SelectedJobResponse> response) {
+//         if (response.isSuccessful) {
+//           setState(() {
+//             // usermanagementapi.Job$Eligibility JobEligibility = [];
+//             // usermanagementapi.Job$JobHighlights JobHighlights = [];
+//             // usermanagementapi.Job$Prerequisites JobPrerequisites = [];
+
+//             // selectedJobDetails.eligibility!.forEach((elem) {
+//             //   elem.forEach((eligibilityItem) {
+//             //     JobEligibility.add(
+//             //       usermanagementapi.Job$Eligibility$Item(
+//             //         name: eligibilityItem.name,
+//             //         value: eligibilityItem.value,
+//             //       ),
+//             //     );
+//             //   });
+//             // });
+//             // selectedJobDetails.JobHighlights!.forEach((element) {
+//             //   element.forEach((highlights) {
+//             //     JobHighlights.add(
+//             //       usermanagementapi.Job$JobHighlights$Item(
+//             //         name: highlights.name,
+//             //         value: highlights.value,
+//             //       ),
+//             //     );
+//             //   });
+//             // });
+//             // selectedJobDetails.prerequisites!.forEach((element) {
+//             //   element.forEach((element) {
+//             //     JobPrerequisites.add(
+//             //       usermanagementapi.Job$Prerequisites$Item(
+//             //         name: element.name,
+//             //         value: element.value,
+//             //       ),
+//             //     );
+//             //   });
+//             // });
+//             jobseekermodels.Company company = response.body!.company!;
+//             jobseekermodels.SelectedJob selectedJob =
+//                 response.body!.selectedJobs[0] as jobseekermodels.SelectedJob;
+//             response.body!.selectedJobs;
+//             _currentJob = usermanagementapi.Job(
+//               jobId: selectedJob.jobId,
+//               role: selectedJob.role,
+//               bppId: response.body!.context.bppId,
+//               bppUri: response.body!.context.bppUri,
+//               providerId: "",
+//               company: company.name,
+//               data: "",
+//               // title: selectedJob.name,
+//               // duration: selectedJob.duration,
+//               // providerName: selectedJob.provider.name,
+//               // categoryName: selectedJob.category!.name ?? "",
+//               // price: selectedJobDetails.price,
+//               // startDate: selectedJobDetails.startDate,
+//               // endDate: selectedJobDetails.endDate,
+//               // rating: selectedJobDetails.rating,
+//               // credits: selectedJobDetails.credits,
+//               // instructors: selectedJobDetails.instructors,
+//               // offeringInstitue: selectedJobDetails.offeringInstitue,
+//               // JobUrl: selectedJobDetails.JobUrl,
+//               // enrollmentEndDate: selectedJobDetails.enrollmentEndDate,
+//               // eligibility: [JobEligibility],
+//               // JobHighlights: [JobHighlights],
+//               // prerequisites: [JobPrerequisites],
+//               // imageUrl: (selectedJob.imageLocations.length > 0)
+//               //     ? selectedJob.imageLocations[0]
+//               //     : null,
+//             );
+
+//             // Job = selectedJob;
+//             // JobDetails = selectedJobDetails;
+//             // _additionalFormUrl = response.body!.additionalFormUrl;
+//             _loadingInProgressFlag = false;
+//           });
+//         }
+//       });
+
+//       _pageInitialized = true;
+//     }
+//     super.didChangeDependencies();
+//   }
+
+//   _register() {
+//     setState(() {
+//       _registrationInProgressFlag = true;
+//     });
+//     jobseekermodels.Context newContext = jobseekermodels.Context(
+//         transactionId: _transactionId ?? "",
+//         messageId: _messageId ?? "",
+//         bppId: widget.job.bppId,
+//         bppUri: widget.job.bppUri);
+//     jobseekermodels.ConfirmJobRequest? request =
+//         jobseekermodels.ConfirmJobRequest(
+//       jobId: widget.job.jobId,
+//       context: newContext,
+//     );
+//     setState(() {
+//       _loadingInProgressFlag = true;
+//     });
+//     Provider.of<jobseekermodels.JobSeekerApi>(
+//       context,
+//       listen: false,
+//     )
+//         .jobConfirmPost(body: request)
+//         .then((Response<jobseekermodels.ConfirmJobResponse> response) {
+//       if (response.isSuccessful) {
+//         setState(() {});
+//       }
+//     });
+//   }
+
+//   _buildJobImage() {
+//     Widget? childWidget;
+//     // if (_currentJob!.imageUrl != null) {
+//     //   childWidget = Image.network(
+//     //     _currentJob!.imageUrl!,
+//     //     fit: BoxFit.fill,
+//     //     alignment: Alignment.topCenter,
+//     //     repeat: ImageRepeat.noRepeat,
+//     //   );
+//     // } else {
+//     childWidget = const Icon(
+//       Icons.menu_book,
+//       size: 48,
+//       color: Colors.black54,
+//     );
+//     // }
+//     return Container(
+//       height: 200,
+//       alignment: Alignment.center,
+//       child: childWidget,
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Scaffold(
+//         key: _scaffoldKey,
+//         appBar: AppBar(
+//           backgroundColor: GlobalConstants.backgroundColor,
+//           title: const Text(
+//             "Job Details",
+//             style: TextStyle(
+//               color: Colors.white,
+//             ),
+//           ),
+//         ),
+//         body: (_loadingInProgressFlag ?? false)
+//             ? LoadingAnimationWidget()
+//             : Column(
+//                 mainAxisAlignment: MainAxisAlignment.start,
+//                 crossAxisAlignment: CrossAxisAlignment.stretch,
+//                 children: <Widget>[
+//                   Expanded(
+//                     child: Container(
+//                       color: GlobalConstants.backgroundColor.withOpacity(0.1),
+//                       child: SingleChildScrollView(
+//                         child: Column(
+//                           children: [
+//                             _buildJobImage(),
+//                             Container(
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Column(
+//                                   mainAxisAlignment: MainAxisAlignment.start,
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   children: [
+//                                     SizedBox(
+//                                       height: 8,
+//                                     ),
+//                                     DecoratedTextWidget(
+//                                       content: _currentJob!.company,
+//                                       fontSize: 18,
+//                                       bold: true,
+//                                       maxLines: 2,
+//                                       overflowEllipsisFlag: true,
+//                                     ),
+//                                     // DecoratedTextWidget(
+//                                     //   content: _currentJob!.rating ?? "3.0",
+//                                     // ),
+//                                     Padding(
+//                                       padding: const EdgeInsets.only(
+//                                         left: 3.0,
+//                                       ),
+//                                       child: Column(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.start,
+//                                         crossAxisAlignment:
+//                                             CrossAxisAlignment.start,
+//                                         children: [
+//                                           // (_currentJob!.offeringInstitue !=
+//                                           //         null)
+//                                           //     ? Text(_currentJob!
+//                                           //         .offeringInstitue!)
+//                                           //     : Container(),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                     const SizedBox(
+//                                       height: 8,
+//                                     ),
+//                                     Padding(
+//                                       padding: const EdgeInsets.symmetric(
+//                                           horizontal: 2.0, vertical: 4.0),
+//                                       child: Column(
+//                                         mainAxisAlignment:
+//                                             MainAxisAlignment.start,
+//                                         crossAxisAlignment:
+//                                             CrossAxisAlignment.start,
+//                                         children: [
+//                                           // (_currentJob!.price != null)
+//                                           //     ? Text(
+//                                           //         "₹" + _currentJob!.price!,
+//                                           //         style: const TextStyle(
+//                                           //           fontSize: 18,
+//                                           //           fontWeight: FontWeight.bold,
+//                                           //         ),
+//                                           //       )
+//                                           //     : Container(),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   Container(
+//                     color: Colors.white,
+//                     alignment: Alignment.center,
+//                     padding: const EdgeInsets.only(
+//                       top: 8,
+//                       bottom: 20,
+//                     ),
+//                     child: FilledButtonWithFeedbackAnimationWidget(
+//                       processingFlag: _registrationInProgressFlag ?? false,
+//                       text: "SIGN UP FOR THIS Job",
+//                       onPressed: _register,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//       ),
+//     );
+//   }
+// }

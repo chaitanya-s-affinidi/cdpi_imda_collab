@@ -1,0 +1,11 @@
+version: 3
+agent: 
+  authtoken: cr_2nnOGTwhSu8B69ExiSo3FE9w8uQ
+
+tunnels:
+  first:
+    proto: http
+    addr: 3010
+  second:
+    proto: http
+    addr: 3001

@@ -1,0 +1,35 @@
+{
+  "name": "server-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@affinidi-tdk/auth-provider": "^1.29.0",
+    "@affinidi-tdk/credential-issuance-client": "^1.29.0",
+    "@affinidi-tdk/credential-verification-client": "^1.30.0",
+    "@affinidi-tdk/iota-browser": "^1.19.0",
+    "@affinidi-tdk/iota-client": "^1.26.0",
+    "@affinidi/passport-affinidi": "^1.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7",
+    "openid-client": "^5.7.0",
+    "ts-node": "^10.9.2",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.5",
+    "@types/uuid": "^10.0.0"
+  }
+}

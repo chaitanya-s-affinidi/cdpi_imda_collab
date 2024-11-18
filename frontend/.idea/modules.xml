@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/apps/job_portal/melos_job_portal.iml" filepath="$PROJECT_DIR$/apps/job_portal/melos_job_portal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/melos_vault_mobile_reference_app.iml" filepath="$PROJECT_DIR$/melos_vault_mobile_reference_app.iml" />
+    </modules>
+  </component>
+</project>
