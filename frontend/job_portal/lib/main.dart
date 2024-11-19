@@ -1,10 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:job_portal/core/usecases/usecase.dart';
 import 'package:job_portal/features/affinidi-login/presentation/pages/auth_callback.page.dart';
 import 'package:job_portal/features/common/pages/dashboard.page.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/providers/new_credentials.provider.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/repositories/oid4vp_websocket_repo.dart';
-import 'package:job_portal/features/inji_oid4vp/domain/usecases/start_listening_to_websocket.dart';
 import 'package:job_portal/features/jobs/presentation/pages/job-application.page.dart';
 import 'package:job_portal/home.page.dart';
 import 'package:job_portal/service_registry.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
