@@ -3,6 +3,7 @@ import 'package:job_portal/core/usecases/usecase.dart';
 import 'package:job_portal/features/affinidi-login/presentation/pages/auth_callback.page.dart';
 import 'package:job_portal/features/common/pages/dashboard.page.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/providers/new_credentials.provider.dart';
+import 'package:job_portal/features/inji_oid4vp/domain/repositories/oid4vp_websocket_repo.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/usecases/start_listening_to_websocket.dart';
 import 'package:job_portal/features/jobs/presentation/pages/job-application.page.dart';
 import 'package:job_portal/home.page.dart';
@@ -74,10 +75,11 @@ class MyApp extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    StartListeningToWebsocket(
-      sharedPrefs: ServiceRegistry.get<SharedPreferences>(),
-      newCredentials: ref.read(newCredentialsProvider.notifier),
-    )(NoParams());
+    ServiceRegistry.get<Oid4vpWebsocketRepo>().startListening(
+      newCredentials: ref.read(
+        newCredentialsProvider.notifier,
+      ),
+    );
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,

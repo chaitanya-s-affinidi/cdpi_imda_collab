@@ -9,6 +9,9 @@ import 'package:job_portal/features/affinidi_tdk_integration/data/repositories/a
 import 'package:job_portal/features/affinidi_tdk_integration/data/repositories/affinidi_verification_repo_impl.dart';
 import 'package:job_portal/features/affinidi_tdk_integration/domain/repositories/affinidi_redirect_flow_repository.dart';
 import 'package:job_portal/features/affinidi_tdk_integration/domain/repositories/affinidi_verification_repository.dart';
+import 'package:job_portal/features/inji_oid4vp/data/repositories/oid4vp_websocket_repo_impl.dart';
+import 'package:job_portal/features/inji_oid4vp/domain/repositories/oid4vp_websocket_repo.dart';
+import 'package:job_portal/features/inji_oid4vp/domain/usecases/handle_event_data_from_web_socket.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +29,10 @@ class ServiceRegistry {
         ServiceRegistry.get<Dio>(),
         baseUrl: dotenv.env["BACKEND_URL"]!,
       ),
+    );
+
+    getIt.registerLazySingleton<Oid4vpWebsocketRepo>(
+      () => Oid4vpWebsocketRepoImpl(),
     );
 
     getIt.registerLazySingleton<AffinidiRedirectFlowRepo>(

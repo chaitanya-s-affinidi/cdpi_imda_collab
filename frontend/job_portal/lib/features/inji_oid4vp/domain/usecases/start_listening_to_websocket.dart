@@ -15,43 +15,36 @@ class StartListeningToWebsocket implements UseCase<void, NoParams> {
     required this.newCredentials,
   });
 
+  final channel =
+      WebSocketChannel.connect(Uri.parse(dotenv.env["BACKEND_WEBSOCKET_URL"]!));
+  bool _isConnected = false;
   @override
   Future<void> call(NoParams params) async {
+    connect();
     // final wsUrl = Uri.parse('wss://right-minnow-leading.ngrok-free.app:3001');
-    final wsUrl = Uri.parse(dotenv.env["BACKEND_WEBSOCKET_URL"]!);
-    final channel = WebSocketChannel.connect(wsUrl);
+  }
 
+  void _reconnect() async {
+    if (!_isConnected) {
+      await Future.delayed(Duration(seconds: 2)); // Initial delay
+      await connect();
+      // Increase delay for subsequent attempts (optional)
+    }
+  }
+
+  connect() async {
     await channel.ready;
     channel.stream.listen((event) {
       String eventData = event as String;
       if (eventData == "ping") {
         channel.sink.add("pong");
-      } else {
-        final oid4vpresp = (jsonDecode(eventData) as Map<String, dynamic>);
-        final vp_token_string = oid4vpresp["vp_token"];
-        final Map<String, dynamic> vp_token =
-            jsonDecode(vp_token_string) as Map<String, dynamic>;
-        final List<dynamic> vcStringList = vp_token["verifiableCredential"];
-
-        final List<Map<String, dynamic>> vcs = [];
-        for (dynamic vcString in vcStringList) {
-          final vc = jsonDecode(vcString as String)["verifiableCredential"]
-              ["credential"];
-          vcs.add(vc);
-        }
-        // debugPrint("vc from websocket");
-        // debugPrint(jsonEncode(vcs[0]));
-        final String requestId =
-            sharedPrefs.getString("oid4vp_request_id") ?? '';
-        final String? oid4vpstate = oid4vpresp["state"];
-        debugPrint(
-            "requestId from shared prefs: $requestId, state from oid4vp response: ${oid4vpstate ?? ''}");
-        if (requestId == oid4vpstate) {
-          for (Map<String, dynamic> vc in vcs) {
-            newCredentials.addNewCredential(vc);
-          }
-        }
-      }
+      } else {}
+    }, onError: (error) {
+      _isConnected = false;
+      _reconnect();
+    }, onDone: () {
+      _isConnected = false;
+      _reconnect();
     });
   }
 }

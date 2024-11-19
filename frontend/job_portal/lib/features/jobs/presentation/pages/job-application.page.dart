@@ -206,7 +206,7 @@ class JobApplicationPage extends HookConsumerWidget {
                                             ),
                                           ),
                                           Text(
-                                            "Student",
+                                            "Sr. Engineering Manager",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.black54,
