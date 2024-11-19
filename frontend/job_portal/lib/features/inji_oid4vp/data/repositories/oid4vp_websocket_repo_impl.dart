@@ -14,7 +14,7 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
       WebSocketChannel.connect(Uri.parse(dotenv.env["BACKEND_WEBSOCKET_URL"]!));
   bool _isConnected = false;
   Timer? _pingTimer;
-  final int pingInterval = 3; // seconds
+  final int pingInterval = 6; // seconds
 
   @override
   Future startListening({
@@ -29,7 +29,7 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
     required NewCredentials newCredentials,
   }) async {
     if (!_isConnected) {
-      await Future.delayed(Duration(seconds: 2)); // Initial delay
+      await Future.delayed(Duration(seconds: 10)); // Initial delay
       await connect(
         newCredentials: newCredentials,
       );
