@@ -5,6 +5,7 @@ import 'package:job_portal/core/usecases/usecase.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/providers/new_credentials.provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class StartListeningToWebsocket implements UseCase<void, NoParams> {
   final SharedPreferences sharedPrefs;
@@ -17,7 +18,7 @@ class StartListeningToWebsocket implements UseCase<void, NoParams> {
   @override
   Future<void> call(NoParams params) async {
     // final wsUrl = Uri.parse('wss://right-minnow-leading.ngrok-free.app:3001');
-    final wsUrl = Uri.parse('ws://localhost:3010');
+    final wsUrl = Uri.parse(dotenv.env["BACKEND_WEBSOCKET_URL"]!);
     final channel = WebSocketChannel.connect(wsUrl);
 
     await channel.ready;
