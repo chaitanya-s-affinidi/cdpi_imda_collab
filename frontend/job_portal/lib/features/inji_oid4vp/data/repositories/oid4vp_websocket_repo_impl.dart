@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/providers/new_credentials.provider.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/repositories/oid4vp_websocket_repo.dart';
 import 'package:job_portal/features/inji_oid4vp/domain/usecases/handle_event_data_from_web_socket.dart';
@@ -37,15 +38,18 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
     required NewCredentials newCredentials,
   }) async {
     await channel.ready;
+    // channel.sink.add("ping");
     channel.stream.listen((event) {
       String eventData = event as String;
+      debugPrint("received Event data: $eventData");
       if (eventData == "ping") {
         channel.sink.add("pong");
       } else {
+        debugPrint("Data sent to HandleEventData");
         HandleEventDataFromWebsocket(
           sharedPrefs: ServiceRegistry.get<SharedPreferences>(),
           newCredentials: newCredentials,
-        );
+        )(HandleEventDataFromWebsocketParams(eventData: eventData));
       }
     }, onError: (error) {
       _isConnected = false;

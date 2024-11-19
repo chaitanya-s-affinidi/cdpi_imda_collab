@@ -42,8 +42,8 @@ class HandleEventDataFromWebsocket
           jsonDecode(vcString as String)["verifiableCredential"]["credential"];
       vcs.add(vc);
     }
-    // debugPrint("vc from websocket");
-    // debugPrint(jsonEncode(vcs[0]));
+    debugPrint("vc from websocket");
+    debugPrint(jsonEncode(vcs[0]));
     final String requestId = sharedPrefs.getString("oid4vp_request_id") ?? '';
     final String? oid4vpstate = oid4vpresp["state"];
     debugPrint(
