@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:job_portal/core/usecases/usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GenerateQRCode implements UseCase<String, NoParams> {
   final SharedPreferences sharedPrefs;
@@ -13,7 +14,7 @@ class GenerateQRCode implements UseCase<String, NoParams> {
   @override
   Future<String> call(NoParams params) async {
     final String response_uri =
-        "https://right-minnow-leading.ngrok-free.app/inji/callback";
+        "${dotenv.env["BACKEND_PUBLIC_URL"]!}/inji/callback";
     // https://23df-2405-201-c058-b814-b126-8ba3-836a-f16d.ngrok-free.app/verifier/vp-response
     final requestId = Uuid().v4();
     final transactionId = Uuid().v4();
