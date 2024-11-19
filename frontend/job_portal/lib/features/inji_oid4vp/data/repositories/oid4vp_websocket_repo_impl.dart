@@ -7,10 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'dart:async';
+
 class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
   final channel =
       WebSocketChannel.connect(Uri.parse(dotenv.env["BACKEND_WEBSOCKET_URL"]!));
   bool _isConnected = false;
+  Timer? _pingTimer;
+  final int pingInterval = 3; // seconds
 
   @override
   Future startListening({
@@ -19,7 +23,6 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
     return connect(
       newCredentials: newCredentials,
     );
-    // final wsUrl = Uri.parse('wss://right-minnow-leading.ngrok-free.app:3001');
   }
 
   void _reconnect({
@@ -30,7 +33,6 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
       await connect(
         newCredentials: newCredentials,
       );
-      // Increase delay for subsequent attempts (optional)
     }
   }
 
@@ -38,8 +40,9 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
     required NewCredentials newCredentials,
   }) async {
     await channel.ready;
-    // channel.sink.add("ping");
+
     channel.stream.listen((event) {
+      _isConnected = true;
       String eventData = event as String;
       debugPrint("received Event data: $eventData");
       if (eventData == "ping") {
@@ -53,14 +56,27 @@ class Oid4vpWebsocketRepoImpl implements Oid4vpWebsocketRepo {
       }
     }, onError: (error) {
       _isConnected = false;
+      _pingTimer?.cancel();
       _reconnect(
         newCredentials: newCredentials,
       );
     }, onDone: () {
       _isConnected = false;
+      _pingTimer?.cancel();
       _reconnect(
         newCredentials: newCredentials,
       );
+    });
+
+    _startPingTimer();
+  }
+
+  void _startPingTimer() {
+    _pingTimer = Timer.periodic(Duration(seconds: pingInterval), (_) {
+      // debugPrint("ping message to be if connected");
+      if (_isConnected) {
+        channel.sink.add("ping");
+      }
     });
   }
 }
